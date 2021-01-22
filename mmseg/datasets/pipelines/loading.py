@@ -104,8 +104,10 @@ class LoadAnnotations(object):
     def __init__(self,
                  reduce_zero_label=False,
                  file_client_args=dict(backend='disk'),
-                 imdecode_backend='pillow'):
+                 imdecode_backend='pillow',
+                 reduce_one_label=False):
         self.reduce_zero_label = reduce_zero_label
+        self.reduce_one_label = reduce_one_label
         self.file_client_args = file_client_args.copy()
         self.file_client = None
         self.imdecode_backend = imdecode_backend
@@ -142,6 +144,8 @@ class LoadAnnotations(object):
             gt_semantic_seg[gt_semantic_seg == 0] = 255
             gt_semantic_seg = gt_semantic_seg - 1
             gt_semantic_seg[gt_semantic_seg == 254] = 255
+        if self.reduce_one_label :
+            gt_semantic_seg = (gt_semantic_seg > 0).astype(np.uint8)
         results['gt_semantic_seg'] = gt_semantic_seg
         results['seg_fields'].append('gt_semantic_seg')
         return results
