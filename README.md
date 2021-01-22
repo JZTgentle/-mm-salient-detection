@@ -1,3 +1,5 @@
+# In the previous
+
 Follow the introduction of MMSegmentation, you can install this project and get start.
 
 Now we use segmentation models as salient detection models to support salient detection.
@@ -6,7 +8,7 @@ If you have any questions, please make issues or contact us by any means.
 
 
 
-Change !!!!!
+# Change !!!!!
 
 Update mmseg/models/segmentors/sod_encoder_decoder.py : base on encoder_decoder.py, support base structure of salient detection encoder2decoder.
 
@@ -24,7 +26,7 @@ Update configs/ : add some models configs, base configs/_base_/
 
 
 
-MMSegmentation README.md:
+## MMSegmentation README.md:
 
 
 [![PyPI](https://img.shields.io/pypi/v/mmsegmentation)](https://pypi.org/project/mmsegmentation)
