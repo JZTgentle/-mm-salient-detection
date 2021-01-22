@@ -6,7 +6,9 @@ Now we use segmentation models as salient detection models to support salient de
 
 If you have any questions, please make issues or contact us by any means.
 
+As we are beginners, there may be some problems in this project. Most welcome to correct us.
 
+Thanks very much for your participation.
 
 # Change !!!!!
 
