@@ -10,7 +10,7 @@ As we are beginners, there may be some problems in this project. Most welcome to
 
 Thanks very much for your participation.
 
-# Change !!!!!
+# Changes !!!!!
 
 Update mmseg/models/segmentors/sod_encoder_decoder.py : base on encoder_decoder.py, support base structure of salient detection encoder2decoder.
 
