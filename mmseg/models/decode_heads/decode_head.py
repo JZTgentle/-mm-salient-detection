@@ -230,5 +230,10 @@ class BaseDecodeHead(nn.Module, metaclass=ABCMeta):
             seg_label,
             weight=seg_weight,
             ignore_index=self.ignore_index)
-        loss['acc_seg'] = accuracy(seg_logit, seg_label)
+
+        if seg_logit.shape[1] == 1:
+            with torch.no_grad():
+                loss['acc_seg'] = 1 - torch.abs(seg_label - seg_logit[:, 0].sigmoid()).mean()
+        else:
+            loss['acc_seg'] = accuracy(seg_logit, seg_label)
         return loss
