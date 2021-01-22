@@ -130,10 +130,15 @@ class Resize(object):
         """
 
         assert isinstance(img_scale, tuple) and len(img_scale) == 2
-        min_ratio, max_ratio = ratio_range
-        assert min_ratio <= max_ratio
-        ratio = np.random.random_sample() * (max_ratio - min_ratio) + min_ratio
-        scale = int(img_scale[0] * ratio), int(img_scale[1] * ratio)
+        if len(ratio_range) == 2:
+            min_ratio, max_ratio = ratio_range
+            assert min_ratio <= max_ratio
+            ratio = np.random.random_sample() * (max_ratio - min_ratio) + min_ratio
+            scale = int(img_scale[0] * ratio), int(img_scale[1] * ratio)
+        else:
+            assert len(ratio_range) > 2
+            ratio = ratio_range[np.random.randint(1, len(ratio_range))]
+            scale = int(img_scale[0] * ratio), int(img_scale[1] * ratio)
         return scale, None
 
     def _random_scale(self, results):
