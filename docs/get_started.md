@@ -66,23 +66,17 @@ pip install mmcv
 
 Currently, mmcv-full is not supported on Windows.
 
-d. Install MMSegmentation.
+d. Install mm-salient-detection.
 
 ```shell
-pip install mmsegmentation # install the latest release
-```
-
-or
-
-```shell
-pip install git+https://github.com/open-mmlab/mmsegmentation.git # install the master branch
+pip install git+https://github.com/JZTgentle/mm-salient-detection.git # install the master branch
 ```
 
 Instead, if you would like to install MMSegmentation in `dev` mode, run following
 
 ```shell
-git clone https://github.com/open-mmlab/mmsegmentation.git
-cd mmsegmentation
+git clone https://github.com/JZTgentle/mm-salient-detection.git
+cd mm-salient-detection
 pip install -e .  # or "python setup.py develop"
 ```
 
@@ -108,8 +102,8 @@ conda activate open-mmlab
 
 conda install pytorch=1.6.0 torchvision cudatoolkit=10.1 -c pytorch
 pip install mmcv-full==latest+torch1.5.0+cu101 -f https://download.openmmlab.com/mmcv/dist/index.html
-git clone https://github.com/open-mmlab/mmsegmentation.git
-cd mmsegmentation
+git clone https://github.com/JZTgentle/mm-salient-detection.git
+cd mm-salient-detection
 pip install -e .  # or "python setup.py develop"
 
 mkdir data
@@ -129,8 +123,8 @@ conda install pytorch=1.6.0 torchvision cudatoolkit=10.1 -c pytorch
 set PATH=full\path\to\your\cpp\compiler;%PATH%
 pip install mmcv
 
-git clone https://github.com/open-mmlab/mmsegmentation.git
-cd mmsegmentation
+git clone hhttps://github.com/JZTgentle/mm-salient-detection.git
+cd mm-salient-detection
 pip install -e .  # or "python setup.py develop"
 
 mklink /D data %DATA_ROOT%
