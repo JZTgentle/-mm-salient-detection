@@ -10,23 +10,42 @@ As we are beginners, there may be some problems in this project. Most welcome to
 
 Thanks very much for your participation.
 
+# Installation
+
+Following the mmsegmetation Installation
+
+# Get Started
+
+Following the mmsegmetation Get Started. 
+
+If you train or test SOD Model, config file uses      **configs/sod_model/model_duts.py**.
+
+If you want to train or test your own models on other datasets, 
+you need to change your own config, and set other model configs and other datasets configs.
+
+You can follow previous configs.
+
 # Changes !!!!!
 
-Update mmseg/models/segmentors/sod_encoder_decoder.py : base on encoder_decoder.py, support base structure of salient detection encoder2decoder.
+- **2021/01/22:**
 
-Update mmseg/datasets/sod.py : base custom.py, a base sod datasets process.
+  Update mmseg/models/segmentors/sod_encoder_decoder.py : base on encoder_decoder.py, support base structure of salient detection encoder2decoder.
 
-Update mmseg/models/losses/bce_loss.py : support BCELoss and BCE Logits Loss.
+  Update mmseg/datasets/sod.py : base custom.py, a base sod datasets process.
 
-Update mmseg/core/evaluation/sod_eval.py : add F-measure(F-measure, P, R), P_R(Precision-recall data, AP, max F-measure), MAE(mae)
+  Update mmseg/models/losses/bce_loss.py : support BCELoss and BCE Logits Loss.
 
-Update configs/_base_/datasets : add SOD datasets configs
+  Update mmseg/core/evaluation/sod_eval.py : add F-measure(F-measure, P, R), P_R(Precision-recall data, AP, max F-measure), MAE(mae)
 
-Update configs/_base_/schedules : add SOD schedule configs
+  Update configs/_base_/datasets : add SOD datasets configs
 
-Update configs/ : add some models configs, base configs/_base_/
+  Update configs/_base_/schedules : add SOD schedule configs
 
+  Update configs/ : add some models configs, base configs/_base_/
 
+- **2021/01/23:**
+
+  Updata configs/_base_/datasets/duts.py: add random crop and padding.
 
 ## MMSegmentation README.md:
 
