@@ -43,7 +43,7 @@ def F_measure(results, gt_seg_maps, thersholds=0.5, belt=0.3, global_com=False):
     return Fmeasure, P, R
 
 
-def P_R(results, gt_seg_maps, steps=0.1, thersholds=None, belt=0.3, global_com=False):
+def P_R(results, gt_seg_maps, steps=0.02, thersholds=None, belt=0.3, global_com=False):
     """Calculate Intersection and Union (IoU)
 
     Args:
@@ -91,8 +91,10 @@ def P_R(results, gt_seg_maps, steps=0.1, thersholds=None, belt=0.3, global_com=F
     Fmeasure = 0
     for i in range(1, len(Ps)):
         AP += (Ps[i]-Ps[i-1]) * Rs[i]
-        Fmeasure= max(((1+belt)*Ps[i]*Rs[i])/(belt*Ps[i]+Rs[i]), Fmeasure)
-    return Ps, Rs, AP, maxFmeasure
+        if Ps[i] != 0 and Rs[i] != 0:
+            Fmeasure= max(((1+belt)*Ps[i]*Rs[i])/(belt*Ps[i]+Rs[i]), Fmeasure)
+    # print(Ps, Rs)
+    return Ps, Rs, AP, Fmeasure
 
 def MAE(results, gt_seg_maps, global_com=False):
     """Calculate MAE
