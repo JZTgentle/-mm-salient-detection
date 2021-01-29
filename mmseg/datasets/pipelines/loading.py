@@ -91,7 +91,7 @@ class LoadAnnotations(object):
     """Load annotations for semantic segmentation.
 
     Args:
-        reduce_zero_label (bool): Whether reduce all label value by 1.
+        reduct_zero_label (bool): Whether reduce all label value by 1.
             Usually used for datasets where 0 is background label.
             Default: False.
         file_client_args (dict): Arguments to instantiate a FileClient.
@@ -105,7 +105,7 @@ class LoadAnnotations(object):
                  reduce_zero_label=False,
                  file_client_args=dict(backend='disk'),
                  imdecode_backend='pillow',
-                 reduce_one_label=False):
+                 reduce_one_label=None):
         self.reduce_zero_label = reduce_zero_label
         self.reduce_one_label = reduce_one_label
         self.file_client_args = file_client_args.copy()
@@ -134,19 +134,23 @@ class LoadAnnotations(object):
         gt_semantic_seg = mmcv.imfrombytes(
             img_bytes, flag='unchanged',
             backend=self.imdecode_backend).squeeze().astype(np.uint8)
-        # modify if custom classes
-        if results.get('label_map', None) is not None:
-            for old_id, new_id in results['label_map'].items():
-                gt_semantic_seg[gt_semantic_seg == old_id] = new_id
         # reduce zero_label
         if self.reduce_zero_label:
             # avoid using underflow conversion
             gt_semantic_seg[gt_semantic_seg == 0] = 255
             gt_semantic_seg = gt_semantic_seg - 1
             gt_semantic_seg[gt_semantic_seg == 254] = 255
-        if self.reduce_one_label :
-            gt_semantic_seg = (gt_semantic_seg > 0).astype(np.uint8)
+        if self.reduce_one_label is not None:
+            if self.reduce_one_label == 'mean':
+                gt_semantic_seg = (gt_semantic_seg / (gt_semantic_seg.max()+1) > 0.5).astype(np.uint8)
+            elif self.reduce_one_label == 'min':
+                gt_semantic_seg = (gt_semantic_seg > 0).astype(np.uint8)
+            elif self.reduce_one_label == 'max':
+                gt_semantic_seg = (gt_semantic_seg == gt_semantic_seg.max()).astype(np.uint8)
+        
         results['gt_semantic_seg'] = gt_semantic_seg
+        # if gt_semantic_seg.shape[-1] == 3:
+        #     gt_semantic_seg = gt_semantic_seg.sum(-1)
         results['seg_fields'].append('gt_semantic_seg')
         return results
 
