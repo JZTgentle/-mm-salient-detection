@@ -14,6 +14,51 @@ from .pipelines import Compose
 
 @DATASETS.register_module()
 class SODDataset(Dataset):
+    """Custom dataset for semantic segmentation.
+
+    An example of file structure is as followed.
+
+    .. code-block:: none
+
+        ├── data
+        │   ├── my_dataset
+        │   │   ├── img_dir
+        │   │   │   ├── train
+        │   │   │   │   ├── xxx{img_suffix}
+        │   │   │   │   ├── yyy{img_suffix}
+        │   │   │   │   ├── zzz{img_suffix}
+        │   │   │   ├── val
+        │   │   ├── ann_dir
+        │   │   │   ├── train
+        │   │   │   │   ├── xxx{seg_map_suffix}
+        │   │   │   │   ├── yyy{seg_map_suffix}
+        │   │   │   │   ├── zzz{seg_map_suffix}
+        │   │   │   ├── val
+
+    The img/gt_semantic_seg pair of CustomDataset should be of the same
+    except suffix. A valid img/gt_semantic_seg filename pair should be like
+    ``xxx{img_suffix}`` and ``xxx{seg_map_suffix}`` (extension is also included
+    in the suffix). If split is given, then ``xxx`` is specified in txt file.
+    Otherwise, all files in ``img_dir/``and ``ann_dir`` will be loaded.
+    Please refer to ``docs/tutorials/new_dataset.md`` for more details.
+
+
+    Args:
+        pipeline (list[dict]): Processing pipeline
+        img_dir (str): Path to image directory
+        img_suffix (str): Suffix of images. Default: '.jpg'
+        ann_dir (str, optional): Path to annotation directory. Default: None
+        seg_map_suffix (str): Suffix of segmentation maps. Default: '.png'
+        split (str, optional): Split txt file. If split is specified, only
+            file with suffix in the splits will be loaded. Otherwise, all
+            images in img_dir/ann_dir will be loaded. Default: None
+        data_root (str, optional): Data root for img_dir/ann_dir. Default:
+            None.
+        test_mode (bool): If test_mode=True, gt wouldn't be loaded.
+        ignore_index (int): The label index to be ignored. Default: 255
+        reduce_zero_label (bool): Whether to mark label zero as ignored.
+            Default: False
+    """
 
     CLASSES = ('background', 'salient')
 
@@ -251,8 +296,12 @@ class SODDataset(Dataset):
             gt_seg_map = mmcv.imread(
                 img_info['ann']['seg_map'], flag='unchanged', backend='pillow')
             maxm = (gt_seg_map).max()
+            # if i == 561:
+            # print(img_info['ann']['seg_map'])
+            # i += 1
             if maxm > 1:
-                gt_seg_map = gt_seg_map / maxm
+                # avoid using underflow conversion
+                gt_seg_map = gt_seg_map / maxm > 0.5
 
             gt_seg_maps.append(gt_seg_map.astype(np.float))
 
@@ -283,25 +332,25 @@ class SODDataset(Dataset):
             if eval_name == 'F_measure':
                 Fmeasure, P, R = F_measure(results, gt_seg_maps, thersholds=0.5, belt=0.3, global_com=False)
                 summary_str = ''
-                summary_str += 'thersholds=0.5, Fmeasure results:'
+                summary_str += 'thersholds=0.5, Fmeasure results:\n'
                 line_format = '{:>10} {:>10} {:>10}\n'
                 summary_str += line_format.format('Fmeasure', 'P', 'R')
                 Fmeasure_str = '{:.4f}'.format(Fmeasure)
                 P_str = '{:.4f}'.format(P)
                 R_str = '{:.4f}'.format(R)
-                summary_str += line_format.format('global', Fmeasure_str, P_str, R_str)
+                summary_str += line_format.format(Fmeasure_str, P_str, R_str)
                 eval_results['Fmeasure'] = Fmeasure
                 eval_results['P'] = P
                 eval_results['R'] = R
             elif eval_name == 'P_R':
                 Ps, Rs, AP, maxFmeasure = P_R(results, gt_seg_maps, steps=0.1, thersholds=None, belt=0.3, global_com=False)
                 summary_str = ''
-                summary_str += 'P_R results:'
+                summary_str += 'P_R results:\n'
                 line_format = '{:>10} {:>10} \n'
                 summary_str += line_format.format('AP', 'maxFmeasure')
                 AP_str = '{:.4f}'.format(AP)
                 maxFmeasure_str = '{:.4f}'.format(maxFmeasure)
-                summary_str += line_format.format('global', AP_str, maxFmeasure_str)
+                summary_str += line_format.format(AP_str, maxFmeasure_str)
                 eval_results['maxFmeasure'] = maxFmeasure
                 eval_results['AP'] = AP
                 eval_results['Ps'] = Ps
@@ -310,11 +359,10 @@ class SODDataset(Dataset):
                 mae = MAE(results, gt_seg_maps, global_com=False)
                 eval_results['MAE'] = mae
                 summary_str = ''
-                summary_str += 'MAE results: '
+                summary_str += 'MAE results:\n'
                 line_format = '{:>10}'
-                summary_str += line_format.format('MAE')
-                MAE_str = '{:.4f}'.format(mae)
-                summary_str += line_format.format('global', MAE_str)
+                MAE_str = '{:.4f}\n'.format(mae)
+                summary_str += line_format.format(MAE_str)
                 eval_results['MAE'] = mae
             else:
                 pass
