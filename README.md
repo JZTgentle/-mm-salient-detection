@@ -45,7 +45,11 @@ You can follow previous configs.
 
 - **2021/01/23:**
 
-  Updata configs/_base_/datasets/duts.py: add random crop and padding.
+  Update configs/_base_/datasets/duts.py: add random crop and padding.
+  
+- **2021/01/29:**
+  
+  Update sod_eval.py, debug
 
 ## MMSegmentation README.md:
 
