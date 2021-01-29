@@ -101,7 +101,7 @@ conda create -n open-mmlab python=3.7 -y
 conda activate open-mmlab
 
 conda install pytorch=1.6.0 torchvision cudatoolkit=10.1 -c pytorch
-pip install mmcv-full==latest+torch1.5.0+cu101 -f https://download.openmmlab.com/mmcv/dist/index.html
+pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cu101/torch1.6.0/index.html
 git clone https://github.com/JZTgentle/mm-salient-detection.git
 cd mm-salient-detection
 pip install -e .  # or "python setup.py develop"
